@@ -42,23 +42,32 @@ public class OrderServiceImpl implements OrderService {
 
     Lock lock = new ReentrantLock(true);
 
+    /**
+     * 抢购 功能
+     * synchronized 为非公平 自动加解锁
+     * ReentrantLock 默认为非公平 true
+     * @param goods
+     * @param order
+     */
     @Override
-    public String sk(Goods goods, Order order) {
-        lock.lock();
+    public synchronized void sk(Goods goods, Order order) {
+        //lock.lock();
         String msg = "";
 
         //1.查询库存
         Goods goodsTmp = goodsMapper.selectById(goods.getId());
+
         if (goodsTmp.getQuantity() > 0) {
             //2.减去库存
-            goods.setQuantity(goods.getQuantity() - 1);
-            goodsMapper.updateById(goods);
-            msg = order.getUserName() + "抢到了" + goods.getGoodsName();
+            goodsTmp.setQuantity(goodsTmp.getQuantity() - 1);
+            goodsMapper.updateById(goodsTmp);
+            msg = order.getUserName() + "get " + goods.getGoodsName()+"库存"+goodsTmp.getQuantity();
         } else {
-            msg =  order.getUserName() + "请求 无库存了";
+            msg =  order.getUserName() + " 无库存了";
         }
-        lock.unlock();
-        return msg;
+        order.setMsg(msg);
+        //lock.unlock();
+
     }
 
 

@@ -8,5 +8,5 @@ import java.util.List;
 public interface OrderService {
     List<Order> list(Goods goods);
     boolean update(Order order);
-    String sk(Goods goods,Order order);
+    void sk(Goods goods,Order order);
 }

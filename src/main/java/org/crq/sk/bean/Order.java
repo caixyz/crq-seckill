@@ -22,5 +22,5 @@ public class Order {
 
     private String userName;
     private Integer goodsId;
-
+    private String msg;
 }
